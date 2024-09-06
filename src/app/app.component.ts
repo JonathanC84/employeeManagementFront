@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+import { Employee } from './employee';
+import { EmployeeService } from './employee.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +9,22 @@ import { Component } from '@angular/core';
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'employeeManagementApp';
+  public employees: Employee[] = [];
+
+  constructor(private employeeService: EmployeeService){}
+
+  ngOnInit() {
+    this.getEmployees();
+  }
+
+  public getEmployees(): void {
+    this.employeeService.getEmployees().subscribe(
+      (response: Employee[]) => {
+        this.employees = response;
+      },
+      (error: HttpErrorResponse) => {
+        alert(error.message);
+      }
+    )
+  }  
 }
